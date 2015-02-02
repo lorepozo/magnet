@@ -1,0 +1,136 @@
+#!/usr/bin/env tclsh
+
+package require http
+package require tdom
+
+set help {
+Usage: magnet searchQuery [searchIndex [-p [peerflixArgs]]]
+
+Options:
+  searchQuery    Just providing this arg results in a list of search results
+  searchIndex    Gets the magnet link for a particular item
+  -p --peerflix  Sends the magnet to peerflix
+  peerflixArgs   Arguments for peerflix
+}
+
+proc urlEncode string {
+	variable map
+	variable alphanumeric a-zA-Z0-9
+	for {set i 0} {$i < 256} {incr i} {
+		set c [format %c $i]
+		if {![string match \[$alphanumeric\] $c]} {
+			set map($c) %[format %.2x $i]
+		}
+	}
+	array set map { " " + \n %0d%0a }
+	regsub -all \[^$alphanumeric\] $string {$map(&)} string
+	regsub -all {[][{})\\]\)} $string {\\&} string
+	return [subst -nocommand $string]
+}
+
+proc search search {
+	::http::config -useragent "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:31.0) Gecko/20100101 Firefox/31.0"
+	set requestURL "http://torrentz.eu/searchN?q=$search"
+	set token [::http::geturl $requestURL]
+	set data [::http::data $token]
+	dom parse -html $data html
+	$html documentElement element
+	$element normalize
+	set fields [list]
+	foreach entry [$element getElementsByTagName dt] {
+		$entry firstChild link
+		if {[$link nodeType] != "ELEMENT_NODE"} {continue}
+		if {[$link getAttribute rel ""] == "nofollow"} {continue}
+		set url [$link getAttribute href]
+    set title [$link asHTML]
+		set title [regsub -all {</.*?>} $title ""]
+		set title [regsub -all {<.*?>} $title " "]
+    set title [regsub -all {\s+} $title " "]
+		set title [string trim $title]
+		set fields [concat $fields [list [list $url $title]]]
+	}
+	return $fields
+}
+
+proc listSearch queryResults {
+	for {set i 1} {$i <= 5 || $i <= [llength queryResults]} {incr i} {
+		puts "$i: [lindex [lindex $queryResults [expr $i-1]] 1]"
+	}
+}
+
+proc results url {
+	set token [::http::geturl $url]
+	set data [::http::data $token]
+	dom parse -html $data html
+	$html documentElement element
+	$element normalize
+	set links [list]
+	foreach entry [$element getElementsByTagName dt] {
+		$entry firstChild link
+		if {[$link getAttribute rel ""] == "nofollow"} {
+			continue
+		}
+		set url [$link getAttribute href]
+		if {![regexp {^http} $url]} {continue}
+		set url [regsub {^https} $url "http"]
+		set links [concat $links $url]
+	}
+	return $links
+}
+
+proc scrape1337x url {
+ 	set token [::http::geturl $url]
+ 	set data [::http::data $token]
+ 	dom parse -html $data html
+ 	set element [$html documentElement]
+ 	$element normalize
+ 	foreach a [$element getElementsByTagName a] {
+ 		set magnet [$a getAttribute href]
+ 		if {![regexp {^magnet} $magnet]} {continue}
+ 		return $magnet
+ 	}
+ 	throw ValueError {no magnet found in 1337x}
+}
+
+proc scrapeKAT url {
+ 	set token [::http::geturl $url]
+ 	set data [::http::data $token]
+	set match [regexp -inline {<a title=\"Magnet link\" href=\"(magnet:.*?)\"} $data]
+	if {[llength $match] > 1} {return [lindex $match 1]}
+ 	throw ValueError {no magnet found in KAT}
+}
+
+proc scrapeh33t url {
+ 	set token [::http::geturl $url]
+ 	set data [::http::data $token]
+	set match [regexp -inline {href=\"(magnet:.*?)\"} $data]
+	if {[llength $match] > 1} {return [lindex $match 1]}
+ 	throw ValueError {no magnet found in KAT}
+}
+
+set larg [llength $argv]
+if {$larg == 0} {puts $help; exit}
+
+set query [lindex $argv 0]
+set queryResults [search [urlEncode $query]]
+
+if {$larg == 1} {listSearch $queryResults; exit}
+
+set queryIndex [lindex $argv 1]
+set resultsURL "http://torrentz.eu[lindex [lindex $queryResults $queryIndex] 0]"
+
+set resultsList [results $resultsURL]
+
+foreach result $resultsList {
+	if {[catch {
+		if {[regexp {1337x\.to} $result]} {set magnet [scrape1337x $result]}
+		if {[regexp {kickass\.so|katproxy.com} $result]} {set magnet [scrapeKAT $result]}
+		if {[regexp {h33t\.to} $result]} {set magnet [scrapeh33t $result]}
+	}]} {continue}
+}
+
+if {$larg == 2} {puts $magnet;exit}
+
+### PEERFLIX INTEGRATION
+set pargs [lrange $argv 3 end]
+eval [concat exec >@stdout 2>@stderr peerflix "\"$magnet\"" $pargs]
