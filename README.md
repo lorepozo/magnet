@@ -6,6 +6,7 @@ This utility scrapes search results from [torrentz.eu](http://www.torrentz.eu), 
 
 ## Usage
 
+##### Search:
 ```bash
 $ magnet "Night of the Living Dead 1968"
 1: Night Of The Living Dead 1968 720p BluRay x264 CtrlHD PublicHD
@@ -15,11 +16,14 @@ $ magnet "Night of the Living Dead 1968"
 5: Night Of The Living Dead 1968 720p BDrip x264 AAC V4G
 ```
 
+##### Selection:
 ```bash
 $ magnet "Night of the Living Dead 1968" 1
 magnet:?xt=urn:btih:F17FB68CE756227FCE325D0513157915F5634985&dn=night+of+the+living+dead+1968+720p+brrip+x264+x0r&tr=udp%3A%2F%2Fopen.demonii.com%3A1337%2Fannounce
 ```
 
+##### Streaming:
+All options after `-p/--peerflix` are passed to peerflix.
 ```bash
 $ magnet "Night of the Living Dead 1968" 1 --peerflix --vlc
 # this starts downloading the torrent via peerflix
