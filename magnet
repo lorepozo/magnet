@@ -4,13 +4,13 @@ package require http
 package require tdom
 
 set help {
-Usage: magnet searchQuery [searchIndex [-p [peerflixArgs]]]
+Usage: magnet query [index [-p [pargs]]]
 
 Options:
-  searchQuery    Just providing this arg results in a list of search results
-  searchIndex    Gets the magnet link for a particular item
+  query          Just providing this arg results in a list of search results
+  index          Gets the magnet link for a particular item
   -p --peerflix  Sends the magnet to peerflix
-  peerflixArgs   Arguments for peerflix
+  pargs          Arguments for peerflix
 }
 
 proc urlEncode string {
