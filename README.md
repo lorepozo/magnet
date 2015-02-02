@@ -1,8 +1,15 @@
 # magnet
 
-A command-line search scraper for a torrent's magnet link. It can pass the magnet (and additional parameters) through to [peerflix](http://github.com/mafintosh/peerflix) to start downloading (and streaming) the search result automatically.
+Search. Select. Stream.
 
-This utility scrapes search results from [torrentz.eu](http://www.torrentz.eu), and scrapes magnet links out of some resulting sites.
+magnet is a command-line torrent search scraper for a magnet link. It can pass a selected magnet (and additional parameters) through to [peerflix](http://github.com/mafintosh/peerflix) to start downloading (and streaming) the search result automatically.
+
+This utility gets search results from aggregator [torrentz.eu](http://www.torrentz.eu) and magnet links out of some resulting sites.
+
+Additionally, just as peerflix works with any torrent (not necessarily video), so too does magnet!
+```bash
+$ magnet "Ubuntu" 1 -p
+```
 
 ## Usage
 
