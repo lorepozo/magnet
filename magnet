@@ -7,7 +7,7 @@ set help {
 Usage: magnet query [index [-p [pargs]]]
 
 Options:
-  query          Just providing this arg results in a list of search results
+  query          Search query
   index          Gets the magnet link for a particular item
   -p --peerflix  Sends the magnet to peerflix
   pargs          Arguments for peerflix
