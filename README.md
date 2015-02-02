@@ -35,7 +35,7 @@ Note that Night of the Living Dead [1968] is in the public domain. Download resp
 
 ```bash
 git clone https://github.com/lukedmor/magnet
-mv magnet/magnet /opt/local/bin/magnet
+cp magnet/magnet /opt/local/bin/magnet
 ```
 
 If you don't have peerflix, `npm install -g peerflix`
