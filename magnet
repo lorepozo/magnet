@@ -122,12 +122,15 @@ set resultsURL "http://torrentz.eu[lindex [lindex $queryResults $queryIndex] 0]"
 set resultsList [results $resultsURL]
 
 foreach result $resultsList {
+    if {[info exists magnet]} {break}
 	if {[catch {
 		if {[regexp {1337x\.to} $result]} {set magnet [scrape1337x $result]}
 		if {[regexp {kickass\.so|katproxy.com} $result]} {set magnet [scrapeKAT $result]}
 		if {[regexp {h33t\.to|monova\.org|seedpeer\.me} $result]} {set magnet [scrapeGeneric $result]}
 	}]} {continue}
 }
+
+if {[info exists magnet] == 0} {puts stderr "Magnet retrieval failed";exit}
 
 if {$larg == 2} {puts $magnet;exit}
 
