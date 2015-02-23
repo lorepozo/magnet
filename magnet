@@ -117,7 +117,7 @@ set queryResults [search [urlEncode $query]]
 if {$larg == 1} {listSearch $queryResults; exit}
 
 set queryIndex [lindex $argv 1]
-set resultsURL "http://torrentz.eu[lindex [lindex $queryResults $queryIndex] 0]"
+set resultsURL "http://torrentz.eu[lindex [lindex $queryResults [expr $queryIndex-1]] 0]"
 
 set resultsList [results $resultsURL]
 
