@@ -2,6 +2,9 @@
 
 package require http
 package require tdom
+package require tls
+
+::http::register https 443 [list ::tls::socket -tls1 1]
 
 set help {
 Usage: magnet query [index [-p [pargs]]]
@@ -29,8 +32,7 @@ proc urlEncode string {
 }
 
 proc search search {
-  ::http::config -useragent "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:31.0) Gecko/20100101 Firefox/31.0"
-  set requestURL "http://torrentz.eu/searchN?q=$search"
+  set requestURL "https://torrentz.eu/searchN?q=$search"
   set token [::http::geturl $requestURL]
   set data [::http::data $token]
   if {[string length $data] == 0} {
