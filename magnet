@@ -78,7 +78,6 @@ proc results url {
     }
     set url [$link getAttribute href]
     if {![regexp {^http} $url]} {continue}
-    set url [regsub {^https} $url "http"]
     set links [concat $links $url]
   }
   return $links
@@ -123,7 +122,7 @@ set queryResults [search [urlEncode $query]]
 if {$larg == 1} {listSearch $queryResults; exit}
 
 set queryIndex [lindex $argv 1]
-set resultsURL "http://torrentz.eu[lindex [lindex $queryResults [expr $queryIndex-1]] 0]"
+set resultsURL "https://torrentz.eu[lindex [lindex $queryResults [expr $queryIndex-1]] 0]"
 
 set resultsList [results $resultsURL]
 
