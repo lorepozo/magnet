@@ -73,12 +73,16 @@ proc results url {
   set links [list]
   foreach entry [$element getElementsByTagName dt] {
     $entry firstChild link
-    if {[$link getAttribute rel ""] == "nofollow"} {
-      continue
-    }
-    set url [$link getAttribute href]
-    if {![regexp {^http} $url]} {continue}
-    set links [concat $links $url]
+    catch {
+      if {[$link getAttribute rel ""] == "nofollow"} {
+        continue
+      }
+      set url [$link getAttribute href]
+      if {![regexp {^http} $url]} {continue}
+      set url [regsub {^https} $url "http"]
+      set links [concat $links $url]
+    } err
+    if {$err == ""} {continue}
   }
   return $links
 }
