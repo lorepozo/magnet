@@ -111,6 +111,10 @@ proc scrapeKAT url {
 
 proc scrapeGeneric url {
   set token [::http::geturl $url]
+  if {[regexp {301} [::http::code $token]]} {
+    set newurl [lindex [::http::meta $token] 1]
+    set token [::http::geturl $newurl]
+  }
   set data [::http::data $token]
   set match [regexp -inline {href=\"(magnet:.*?)\"} $data]
   if {[llength $match] > 1} {return [lindex $match 1]}
@@ -134,7 +138,7 @@ foreach result $resultsList {
   if {[info exists magnet]} {break}
   if {[catch {
     if {[regexp {1337x\.to} $result]} {set magnet [scrape1337x $result]}
-    if {[regexp {kickass\.so|katproxy.com} $result]} {set magnet [scrapeKAT $result]}
+    if {[regexp {kickass\.so|katproxy\.com|kat\.cr} $result]} {set magnet [scrapeKAT $result]}
     if {[regexp {h33t\.to|monova\.org|seedpeer\.me} $result]} {set magnet [scrapeGeneric $result]}
   }]} {continue}
 }
