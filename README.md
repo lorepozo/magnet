@@ -2,13 +2,13 @@
 
 Search. Select. Stream.
 
-__`magnet`__ is a command-line torrent search scraper for magnet links written in Tcl. It can pass a selected magnet (and additional parameters) through to [peerflix](http://github.com/mafintosh/peerflix) to start downloading (and streaming) the search result automatically. Or you could pipe the output from __`magnet`__ into your preferred torrent utility!
+__`magnet`__ is a command-line torrent search scraper for magnet links. It can pass a selected magnet (and additional parameters) through to [peerflix](http://github.com/mafintosh/peerflix) to start downloading (and streaming) the search result automatically. Or you could pipe the output from __`magnet`__ into your preferred torrent utility!
 
-This utility gets search results from aggregator [torrentz.eu](http://www.torrentz.eu) and magnet links out of some resulting sites.
+This utility gets search results and magnet links from [kat.cr](https://kat.cr).
 
 The search isn't limited to _just_ video!
 ```bash
-$ magnet "Ubuntu" 1 -p
+$ magnet "Ubuntu" 1 --
 ```
 
 ## Usage
@@ -30,9 +30,9 @@ magnet:?xt=urn:btih:F17FB68CE756227FCE325D0513157915F5634985&dn=night+of+the+liv
 ```
 
 ##### Stream:
-All options after `-p/--peerflix` are passed to peerflix.
+Supply `--` and the magnet is sent to peerflix. All options after `--` are passed to peerflix.
 ```bash
-$ magnet "Night of the Living Dead 1968" 1 --peerflix --vlc
+$ magnet "Night of the Living Dead 1968" 1 -- --vlc
 # this starts downloading the torrent via peerflix
 ```
 
@@ -41,8 +41,7 @@ Note that Night of the Living Dead [1968] is in the public domain. Download resp
 ## Installation
 
 ```bash
-git clone https://github.com/lukedmor/magnet
-cp magnet/magnet /usr/local/bin/magnet
+npm install -g magnet-cli
+# optional, if you also want to stream/download:
+npm install -g peerflix
 ```
-
-If you don't have peerflix, `npm install -g peerflix`. Peerflix _isn't_ necessary, though! You could use your preferred torrent utility instead by piping the output.
