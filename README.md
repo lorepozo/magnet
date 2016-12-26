@@ -4,7 +4,7 @@ Search. Select. Stream.
 
 __`magnet`__ is a command-line torrent search scraper for magnet links. It can pass a selected magnet (and additional parameters) through to [peerflix](http://github.com/mafintosh/peerflix) to start downloading (and streaming) the search result automatically. Or you could pipe the output from __`magnet`__ into your preferred torrent utility!
 
-This utility gets search results and magnet links from [extratorrent.cc](https://extratorrent.cc).
+This utility gets search results and magnet links from [thepiratebay.org](https://thepiratebay.org).
 
 The search isn't limited to _just_ video!
 ```bash
