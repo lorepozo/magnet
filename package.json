@@ -1,6 +1,6 @@
 {
   "name": "magnet-cli",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A CLI for querying and retrieving torrent magnet links",
   "author": "Lucas Morales <lucas@lucasem.com>",
   "bin": {
@@ -16,5 +16,5 @@
     "type": "git",
     "url": "git://github.com/lucasem/magnet.git"
   },
-  "license": "MIT"
+  "license": "GPL-3.0"
 }
